@@ -1,62 +1,62 @@
-import { useQuery, useMutation } from "react-query";
+import { useMutation, useQuery } from 'react-query'
 
 import {
-  performDeleteRequest,
-  performGetRequest,
-  performPatchRequest,
-  performPostRequest,
-  performPutRequest,
-} from "./apiClient";
+	performDeleteRequest,
+	performGetRequest,
+	performPatchRequest,
+	performPostRequest,
+	performPutRequest,
+} from './apiClient'
 
 export const useGetQuery = (key, url, params = {}, options) => {
-  const requestOptions = options
-    ? options
-    : { refetchOnWindowFocus: false, retry: false };
-  return useQuery({
-    queryKey: [key],
-    queryFn: () => {
-      return performGetRequest({ url, params });
-    },
-    ...requestOptions,
-  });
-};
+	const requestOptions = options
+		? options
+		: { refetchOnWindowFocus: false, retry: false }
+	return useQuery({
+		queryKey: [key],
+		queryFn: () => {
+			return performGetRequest({ url, params })
+		},
+		...requestOptions,
+	})
+}
 
 export const usePostMutation = (url, onSuccess, onError) => {
-  return useMutation({
-    mutationFn: ({ data, params }) => {
-      return performPostRequest({ url, data, params });
-    },
-    onSuccess,
-    onError,
-  });
-};
+	return useMutation({
+		mutationFn: ({ data, params }) => {
+			return performPostRequest({ url, payload: data, params })
+		},
+		onSuccess,
+		onError,
+	})
+}
 
 export const useUpdateMutation = (url, onSuccess, onError) => {
-  return useMutation({
-    mutationFn: ({ data, params }) => {
-      return performPatchRequest({ url, data, params });
-    },
-    onSuccess,
-    onError,
-  });
-};
+	return useMutation({
+		mutationFn: ({ data, params }) => {
+			return performPatchRequest({ url, data, params })
+		},
+		onSuccess,
+		onError,
+	})
+}
 
 export const usePutMutation = (url, onSuccess, onError) => {
-  return useMutation({
-    mutationFn: ({ data, params }) => {
-      return performPutRequest({ url, data, params });
-    },
-    onSuccess,
-    onError,
-  });
-};
+	return useMutation({
+		mutationFn: ({ data, params }) => {
+			return performPutRequest({ url, data, params })
+		},
+		onSuccess,
+		onError,
+	})
+}
 
 export const useDeleteMutation = (url, onSuccess, onError) => {
-  return useMutation({
-    mutationFn: ({ data, params }) => {
-      return performDeleteRequest({ url, data, params });
-    },
-    onSuccess,
-    onError,
-  });
-};
+	return useMutation({
+		mutationFn: ({ data, params }) => {
+			return performDeleteRequest({ url, data, params })
+		},
+		onSuccess,
+		onError,
+	})
+}

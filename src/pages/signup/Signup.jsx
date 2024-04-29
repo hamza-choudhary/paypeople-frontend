@@ -7,7 +7,7 @@ export function Signup() {
 			<div className="flex-1 bg-slate-500">
 				<img
 					src={singnupCoverImg}
-					className="h-screen object-cover object-left"
+					className="h-screen object-cover object-left bg-fixed w-full"
 					alt="cover-img"
 				/>
 			</div>

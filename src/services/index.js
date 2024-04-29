@@ -1,9 +1,9 @@
-export { apiEndpoints } from "./apiEndpoints";
-export { queryKeys } from "./queryKeys";
+export { apiEndPoints } from './apiEndPoints'
 export {
-  useGetQuery,
-  usePostMutation,
-  useUpdateMutation,
-  usePutMutation,
-  useDeleteMutation,
-} from "./networkRequestService";
+	useDeleteMutation,
+	useGetQuery,
+	usePostMutation,
+	usePutMutation,
+	useUpdateMutation,
+} from './networkRequestServices'
+export { queryKeys } from './queryKeys'

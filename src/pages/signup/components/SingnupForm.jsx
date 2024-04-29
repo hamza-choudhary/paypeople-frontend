@@ -1,4 +1,7 @@
-import { singupValidationSchema } from '@constants'
+import LoadingSpinner from '@common/components/LoadingSpinner'
+import { REFRESH_TOKEN, singupValidationSchema } from '@constants'
+import { apiEndPoints, usePostMutation } from '@services'
+import { setLocalStorageItem } from '@utils'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
 
 const initialValues = {
@@ -10,13 +13,30 @@ const initialValues = {
 }
 
 export function SingnupForm() {
+	const { mutate, isError, isLoading, error } = usePostMutation(
+		apiEndPoints.AUTH.CUSTOMER_SIGNUP,
+		onSubmitSuccess
+	)
+
+	function onSubmitSuccess(response) {
+		const { refreshToken } = response.data
+		setLocalStorageItem(REFRESH_TOKEN, refreshToken)
+	}
+
+	async function submitHandler(values, { setSubmitting }) {
+		mutate({ data: values })
+		setSubmitting(false)
+	}
+
 	return (
-		<div className="flex items-center justify-center p-12">
+		<div className="flex items-center justify-center p-12 relative h-screen">
 			<div className="mx-auto w-full max-w-[550px] bg-white">
 				<h1 className="text-3xl font-bold mb-6">Sign Up</h1>
+				<LoadingSpinner isLoading={isLoading} />
 				<Formik
 					initialValues={initialValues}
 					validationSchema={singupValidationSchema}
+					onSubmit={submitHandler}
 				>
 					{({ errors, touched, isValid }) => (
 						<Form>
@@ -145,7 +165,7 @@ export function SingnupForm() {
 							<div>
 								<button
 									type="submit"
-									disabled={isValid}
+									disabled={!isValid}
 									className={`hover:shadow-form w-full rounded-md bg-[#6A64F1] py-2 px-8 text-center text-base font-semibold text-white outline-none ${
 										!isValid ? 'opacity-50 cursor-not-allowed' : ''
 									}`}
