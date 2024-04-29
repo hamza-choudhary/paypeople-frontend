@@ -3,6 +3,7 @@ import { REFRESH_TOKEN, singupValidationSchema } from '@constants'
 import { apiEndPoints, usePostMutation } from '@services'
 import { setLocalStorageItem } from '@utils'
 import { ErrorMessage, Field, Form, Formik } from 'formik'
+import toast, { Toaster } from 'react-hot-toast'
 
 const initialValues = {
 	firstName: '',
@@ -13,14 +14,25 @@ const initialValues = {
 }
 
 export function SingnupForm() {
-	const { mutate, isError, isLoading, error } = usePostMutation(
+	const { mutate, isLoading } = usePostMutation(
 		apiEndPoints.AUTH.CUSTOMER_SIGNUP,
-		onSubmitSuccess
+		onSubmitSuccess,
+		onSubmitError
 	)
 
 	function onSubmitSuccess(response) {
 		const { refreshToken } = response.data
 		setLocalStorageItem(REFRESH_TOKEN, refreshToken)
+		const notify = () => toast.success('Successfully registered')
+		notify()
+
+		//FIXME: navigate to
+	}
+
+	function onSubmitError(err, _values, _context) {
+		const errorMessage = err?.response?.data?.message ?? err?.message
+		const notify = () => toast.error(`Error: ${errorMessage}`)
+		notify()
 	}
 
 	async function submitHandler(values, { setSubmitting }) {
@@ -33,6 +45,7 @@ export function SingnupForm() {
 			<div className="mx-auto w-full max-w-[550px] bg-white">
 				<h1 className="text-3xl font-bold mb-6">Sign Up</h1>
 				<LoadingSpinner isLoading={isLoading} />
+				<Toaster />
 				<Formik
 					initialValues={initialValues}
 					validationSchema={singupValidationSchema}
