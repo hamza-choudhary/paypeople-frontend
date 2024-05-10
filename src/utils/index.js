@@ -1,5 +1,6 @@
+export { getCookieItem } from './cookie'
 export {
-  getLocalStorageItem,
-  removeLocalStorageItem,
-  setLocalStorageItem,
-} from "./localstorage";
+	getLocalStorageItem,
+	removeLocalStorageItem,
+	setLocalStorageItem,
+} from './localstorage'
