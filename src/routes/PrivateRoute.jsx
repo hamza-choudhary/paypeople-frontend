@@ -1,11 +1,11 @@
-import { Navigate } from "react-router-dom";
-import { ROUTES } from "@routes";
-import { getLocalStorageItem } from "@utils";
-import { ACCESS_TOKEN } from "@constants";
+import { ROUTES } from '@routes'
+import { AppContext } from '@useContext'
+import { useContext } from 'react'
+import { Navigate } from 'react-router-dom'
 
-export const PrivateRoute = ({ children }) => {
-  if (!getLocalStorageItem(ACCESS_TOKEN))
-    return <Navigate to={ROUTES.UN_AUTHORIZED} replace />;
+export function PrivateRoute({ children }) {
+	const { isLoggedIn } = useContext(AppContext)
+	if (!isLoggedIn) return <Navigate to={ROUTES.LOGIN} replace />
 
-  return children;
-};
+	return children
+}

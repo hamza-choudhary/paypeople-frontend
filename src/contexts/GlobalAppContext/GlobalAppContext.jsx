@@ -1,9 +1,10 @@
+import LoadingSpinner from '@common/components/LoadingSpinner'
 import { REFRESH_TOKEN } from '@constants'
 import { getUserFromAccessCookie, tokenRefresh } from '@helpers'
 import { AppContext } from '@useContext'
 import { getLocalStorageItem } from '@utils'
 import PropTypes from 'prop-types'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 // GlobalAppContext.propTypes = {
 // 	children: PropTypes.object,
@@ -12,25 +13,26 @@ import { useEffect, useState } from 'react'
 export const GlobalAppContext = ({ children }) => {
 	const [user, setUser] = useState(null)
 	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	const [isLoading, setIsLoading] = useState(true)
 
 	function login(user) {
 		setUser(user)
 		setIsLoggedIn(true)
+		setIsLoading(false)
 	}
 
 	function logout() {
 		setUser(null)
 		setIsLoggedIn(false)
+		setIsLoading(false)
 		//FIXME: navigate to login screen
 	}
 
-	async function refreshTokenRequest() {
+	const refreshTokenRequest = useCallback(async () => {
 		await tokenRefresh()
 		const user = getUserFromAccessCookie()
 		login(user)
-	}
-
-	//todo: create a login function and use it in refreshTokenrequest + under user is logged in comment + when user will be logging into app
+	}, [])
 
 	useEffect(() => {
 		//check if access token is availible or not
@@ -44,15 +46,17 @@ export const GlobalAppContext = ({ children }) => {
 		if (!refreshToken) {
 			//logout the user
 			logout()
+			setIsLoading(false)
 			return
 		}
 		//? get new refresh token
 		refreshTokenRequest()
-	}, [])
+	}, [refreshTokenRequest])
 
 	return (
-		<AppContext.Provider value={{ user, logout, isLoggedIn }}>
-			{children}
+		<AppContext.Provider value={{ user, logout, login, isLoggedIn }}>
+			<LoadingSpinner isLoading={isLoading} />
+			{!isLoading && children}
 		</AppContext.Provider>
 	)
 }
